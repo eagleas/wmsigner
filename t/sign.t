@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 my ( $planstr, $signstr, $request, $response );
 
@@ -41,8 +41,11 @@ unlink( 'wmsigner.ini' );
 $res = make_req ( "--wmid $wmid --password $pass --key-base64 $key_b64" );
 like ( $res, qr/<retval>0<\/retval>/ , "without wmsigner.ini" );
 
-#$res = make_req ( "-w $wmid -p $pass -k $key", "-s" );
-#like ( $res, qr/<retval>0<\/retval>/ , "with three short parameters and plan" );
+$res = make_req ( "-w $wmid -p $pass -k $key" );
+like ( $res, qr/<retval>0<\/retval>/ , "without wmsigner.ini short" );
+
+$res = make_req ( "-w $wmid -p $pass -k $key", "-s" );
+like ( $res, qr/<retval>0<\/retval>/ , "without wmsigner.ini short and plan" );
 
 # Test with wmid
 write_ini ( '123456789012', $pass, $key );

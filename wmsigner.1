@@ -1,4 +1,4 @@
-.TH wmsigner 1  "March 15, 2006" "version 0.1" "TOOLS"
+.TH wmsigner 1  "July 23, 2007" "version 0.2" "TOOLS"
 .SH NAME
 wmsigner module \- tool for Webmoney signing data.
 .SH DESCRIPTION
@@ -26,7 +26,7 @@ my_Secure-password
 Password for key_file
 .TP
 .B -w --wmid
-123456789012 : WMID (12 Digits)
+123456789012 : WMID (12 digits)
 .TP
 .B -s --sign
 string_to_signification : signing specified string
@@ -72,8 +72,18 @@ wmsigner binary was compiled on another system or other system error.
 .SH EXAMPLES
 .TP
 Testing:
+
 .B echo
 -ne "TestString123\\004\\r\\n" | 
 .B ./wmsigner
+.TP
+Without wmsigner.ini:
+
+.B echo 
+-ne "TestString123\\004\\r\\n" | 
+.B ./wmsigner -w 123456789012 -k ./key.kwm -p '%pa$$w00rd'
+
+.B ./wmsigner -w 123456789012 -k ./key.kwm -p '%pa$$w00rd' -s 'TestString123'
+
 .SH AUTHOR
 Alexander Oryol (eagle.alex (at) gmail.com)

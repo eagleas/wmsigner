@@ -23,6 +23,8 @@
 
 const char* WMSignerVersion = "2.0b";
 bool isIgnoreKeyFile = false;
+bool isIgnoreIniFile = false;
+bool isKWMFileFromCL = false;
 char szKeyData[MAXBUF+1] = "";       /* Buffer for Signre-s key      */
 int Key64Flag = FALSE;
 
@@ -115,15 +117,15 @@ bool LoadIniFile(const char *szFName, szptr& szLogin, szptr& szPwd, szptr& szFil
     if (fgets(szBufStr, MAXSTR, file))
     {
       szLogin = stripCRLF(szBufStr);
-      if( strlen( szLogin ) < 2 ) { ErrorCode = -4; return bRC; }
+      if( strlen( szLogin ) < 1 ) { ErrorCode = -4; return bRC; }
       if (fgets(szBufStr, MAXSTR, file))
       {
         szPwd = stripCRLF(szBufStr);
-        if( strlen( szPwd ) < 2 ) { ErrorCode = -5; return bRC; }
+        if( strlen( szPwd ) < 1 ) { ErrorCode = -5; return bRC; }
         if (fgets(szBufStr, MAXSTR, file))
         {
           szFileName = stripCRLF(szBufStr);
-          if( strlen( szFileName ) < 2 ) { ErrorCode = -6; return bRC; }
+          if( strlen( szFileName ) < 1 ) { ErrorCode = -6; return bRC; }
           bRC = true;
         }
         else
@@ -162,7 +164,7 @@ int CommandLineParse( const int argc, const char *argv[], char *szLoginCL, char 
      if( (strcmp( argv[i], "-h") == 0) || (strcmp( argv[i], "--help") == 0) ){
        printf("wmsigner, Version %s (c) WebMoney Transfer (r), 2007\n\r\n\r", WMSignerVersion );
        printf(" -p   [--password]   : Password for key_file\n\r");
-       printf(" -w   [--wmid]       : 123456789012 : WMID (12 Digits)\n\r");
+       printf(" -w   [--wmid]       : 123456789012 : WMID (12 digits)\n\r");
        printf(" -s   [--sign]       : string_to_signification : signing specified string\n\r");
        printf(" -i   [--ini-path]   : Correct path to ini_file with ini_file_name *.ini\n\r");
        printf(" -k   [--key-path]   : Correct path to key_file with key_file_name\n\r");
@@ -204,6 +206,7 @@ int CommandLineParse( const int argc, const char *argv[], char *szLoginCL, char 
      if( (strcmp( argv[i], "-k") == 0) || (strcmp( argv[i], "--key-path") == 0)){
        if( j >= argc ) fatal_err("Key file not defined!\n\r");
        strncpy( szKeyFileNameCL, argv[j], MAXSTR);
+       isKWMFileFromCL = true;
        numparam++;
      }
 
@@ -266,10 +269,10 @@ int main(int argc, char* argv[])
   szptr szIniFileFull = "";
 
 #ifdef _WIN32
-    char  drive[_MAX_DRIVE];
-    char  dir[_MAX_DIR];
-    char  fname[_MAX_FNAME];
-    char  ext[_MAX_EXT];
+    char  drive[_MAX_DRIVE] = "";
+    char  dir[_MAX_DIR] = "";
+    char  fname[_MAX_FNAME] = "";
+    char  ext[_MAX_EXT] = "";
 
     _splitpath((const char *)argv[0], drive, dir, fname, ext );
     szIniFileFull += drive;
@@ -291,24 +294,23 @@ int main(int argc, char* argv[])
   }
   /*  End of Parse command line */
 
-
   /*  Replace Key File Name from command Line, if present  */
   if( strlen(szFileNameCL) ) szIniFileFull = szFileNameCL;
 
-  if( (Key64Flag == TRUE) && (strlen(szLoginCL) > 1) && (strlen(szPwdCL) > 1))
-	  isIgnoreKeyFile = true;
+  if( ((Key64Flag == TRUE) || (isKWMFileFromCL == true)) && (strlen(szLoginCL) > 1) && (strlen(szPwdCL) > 1))
+	  isIgnoreIniFile = true;
 
   // loading ini-file
-  if( isIgnoreKeyFile == false )
+  if( isIgnoreIniFile == false )
    if (!LoadIniFile(szIniFileFull, szLogin, szPwd, szFileName, siErrCode))
    {
-    sprintf(szError, "Error %d", siErrCode);
-	printf(szError);
-    return 2;
+     sprintf(szError, "Error %d", siErrCode);
+     printf(szError);
+     return 2;
    }
 
   //  Replace Login and Password from command Line, if present
-  if( strlen(szKeyFileNameCL) ) szFileName = szKeyFileNameCL;
+  if( isKWMFileFromCL == true ) szFileName = szKeyFileNameCL;
   if( strlen(szLoginCL) ) szLogin  = szLoginCL;
   if( strlen(szPwdCL) ) szPwd = szPwdCL;
 

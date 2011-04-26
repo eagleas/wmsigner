@@ -1,6 +1,6 @@
 Summary: wmsigner module for Webmoney signing data
 Name: wmsigner
-Version: 2.0beta
+Version: 2.0
 Release: 1
 Group: Applications/Tools
 License: BSD
@@ -35,6 +35,8 @@ make install prefix=%{buildroot}
 %attr(0644, root, bin) /usr/share/doc/wmsigner/README.rus
 
 %changelog
+* Mon Jul 23 2007 Alexander Oryol <eagle.alex@gmail.com> 2.0
+- update to 2.0
 * Wed Jul 18 2007 Alexander Oryol <eagle.alex@gmail.com> 2.0-beta
 - update to 2.0beta
 * Wed Jul 05 2006 Alexander Oryol <eagle.alex@gmail.com> 1.2-1

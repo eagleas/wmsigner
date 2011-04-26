@@ -1,5 +1,11 @@
 Changelog
 
+Mon Jul 23 15:08:00 MSK 2007
+----------------------------
+  V 2.0
+  * Bug:
+    - was: unjustified require wmsigner.ini
+
 Wed Jul 18 19:38:00 MSK 2007
 ----------------------------
   V 2.0 beta

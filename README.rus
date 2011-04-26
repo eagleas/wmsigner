@@ -84,7 +84,7 @@ $ echo -ne "TestString123\004\r\n" | ./wmsigner
 wmsigner версии 2.0 имеет следующие опции командной строки:
 
  -p   [--password]   : Password for key_file
- -w   [--wmid]       : 123456789012 : WMID (12 Digits)
+ -w   [--wmid]       : 123456789012 : WMID (12 digits)
  -s   [--sign]       : string_to_signification : signing specified string
  -i   [--ini-path]   : Correct path to ini_file with ini_file_name *.ini
  -k   [--key-path]   : Correct path to key_file with key_file_name
