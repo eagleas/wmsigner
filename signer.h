@@ -3,6 +3,9 @@
 #include "stdafx.h"
 #include "cmdbase.h"
 
+#define MAXBUF  8192 
+#define MAXSTR  8192
+
 const long lMinKeyFileSize	= 164;//smallest size of the keysfaile
 const long lKiloByte		= 1024;//1 kilobyte in bytes
 const long lMegaByte		= lKiloByte*lKiloByte;//1 megabyte in bytes
@@ -12,11 +15,17 @@ const szptr szOptionKeyFileSize = "KeyFileSize";
 const unsigned int uiKWNHeaderOffset = 2;
 const unsigned int uiKWNHeaderSize = uiKWNHeaderOffset + lMinKeyFileSize;
 const unsigned int uiBlockSizeOffset = 1;
-extern bool isIgnoreKeyFile;
-extern char szKeyData[];
 
 class Signer
 {
+
+public:
+ bool isIgnoreKeyFile;
+ bool isIgnoreIniFile;
+ bool isKWMFileFromCL;
+ char szKeyData[MAXBUF+1];       /* Buffer for Signre-s key      */
+ int Key64Flag;
+
 protected:
   szptr m_szUserName;
   szptr m_szPassword;

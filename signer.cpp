@@ -31,10 +31,6 @@
 #define FALSE	0
 #endif
 
-extern bool isIgnoreKeyFile;
-extern char szKeyData[];
-extern int Key64Flag;
-
 bool Signer::SecureKeyByIDPW(char *buf, DWORD dwBuf)
 {
   if(((KeyFileFormat *)buf)->wSignFlag == 0)
@@ -101,7 +97,7 @@ void Signer::SetKeyFromCL( int flag, char *KeyBuf )
 {
    KeyFromCL = FALSE;
    if( flag == TRUE ) KeyFromCL = TRUE;
-   memcpy( (void *) KeyBuffer, (const void *)KeyBuf, 164 );
+   memcpy( (void *) szKeyData, (const void *)KeyBuf, 164 );
 }
 //---------------------------------------------------------
 
@@ -185,6 +181,11 @@ Signer::Signer(const char * szLogin, const char *szPassword, const char *szKeyFi
  : m_szUserName(szLogin), m_szPassword(szPassword), m_szKeyFileName(szKeyFileName)
 {
   m_siErrorCode = 0;
+  isIgnoreKeyFile = false;
+  isIgnoreIniFile = false;
+  isKWMFileFromCL = false;
+  memset(szKeyData, 0, MAXBUF+1);
+  Key64Flag = FALSE;
 }
 
 short Signer::ErrorCode()

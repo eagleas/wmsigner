@@ -67,7 +67,8 @@ if ( ! open(TEST, "< test.b64" ) ) {
 
 use Test::Harness;
   
-runtests( 't/base.t', 't/sign.t' );
+runtests( 't/base.t', 't/sign.t', 't/iface.t' );
+#runtests( 't/iface.t' );
 
 if ( $exe =~ /\.exe$/) {
     unlink('wmsigner.ini'); unlink('test.b64');

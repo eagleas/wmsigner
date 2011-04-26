@@ -17,9 +17,9 @@ INSTALL_DIR     = $(INSTALL) -m 755 -d
 INSTALL_DATA    = $(INSTALL) -m 644
 INSTALL_DOC	= $(INSTALL) -m 644
 
-all:   crypto.cpp md4.cpp rsalib1.cpp cmdbase.cpp signer.cpp wmsigner.cpp 
-	/usr/bin/g++ crypto.cpp md4.cpp rsalib1.cpp cmdbase.cpp signer.cpp wmsigner.cpp -o wmsigner
-	/usr/bin/g++ code64.cpp -o code64 
+all:   crypto.cpp md4.cpp rsalib1.cpp cmdbase.cpp signer.cpp wmsigner.cpp base64.cpp code64.cpp
+	/usr/bin/g++ crypto.cpp md4.cpp rsalib1.cpp base64.cpp cmdbase.cpp signer.cpp wmsigner.cpp -o wmsigner
+	/usr/bin/g++ code64.cpp base64.cpp -o code64 
 	/bin/chmod g+x,o+x wmsigner code64 
 
 test:   
