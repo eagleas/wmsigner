@@ -59,13 +59,14 @@ bool Signer::SecureKeyByIDPWHalf(char *buf, DWORD dwBuf)
   DWORD dwCRC[4];
   szptr szIDPW = m_szUserName;
   int len = strlen(m_szPassword)/2 + 1;
-  char *pBuf = NULL;
   if (len > 1)
   {
-    pBuf = new char[len];
-    memset(pBuf, 0, len);
+    char* pBuf = new char[len];
     strncpy(pBuf, m_szPassword, len-1);
+    pBuf[len-1] = '\0';
     szIDPW += pBuf;
+    
+    delete [] pBuf;
   }
   Keys::CountCrcMD4(dwCRC, szIDPW, szIDPW.strlen());
 
@@ -123,12 +124,10 @@ int Signer::LoadKeys()
   {
     //load key data from "BIG" keys file
 
-    // bufer for a part of BIG file filled by random data,
-    // excluding single mentioned byte of key
-    char  *MapBuf;
     // size of this buffer
     DWORD dwMapBufSize;
     // result key buffer setting to 164 bytes size
+    delete [] pBufRead;
     pBufRead = new char [lMinKeyFileSize];
     // header buffer that contain key map and other info
     DWORD *header = new DWORD [uiKWNHeaderSize];
@@ -144,8 +143,10 @@ int Signer::LoadKeys()
       {
         bKeysReaded = true;
         dwMapBufSize = header[1];
-        MapBuf = new char [dwMapBufSize];
-        //Собираем ключик буквально по-крупицам:-)
+	// buffer for a part of BIG file filled by random data,
+	// excluding single mentioned byte of key
+	char *MapBuf = new char [dwMapBufSize];
+        //РЎРѕР±РёСЂР°РµРј РєР»СЋС‡РёРє Р±СѓРєРІР°Р»СЊРЅРѕ РїРѕ-РєСЂСѓРїРёС†Р°Рј:-)
         for (int i = 0; i < lMinKeyFileSize; i++)
         {
           //now we trying to read part of "BIG" file first and extract key value using key map then
@@ -160,10 +161,10 @@ int Signer::LoadKeys()
             bKeysReaded = false;
           }
         }
+	delete [] MapBuf;
       }
     }
     //delete memory allocated using new operator
-    delete [] MapBuf;
     delete [] header;
   }
 
@@ -234,6 +235,7 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
   puts("\nin hex:\n");
   puts(szInHex);
   puts("\n");
+  delete [] szInHex;
 #endif
 
   if(Keys::CountCrcMD4(dwCRC, szIn, strlen(szIn)))
@@ -258,6 +260,10 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
     char *charCrpBlock = new char[dwCrpSize*2+1];
     us2sz((const unsigned short *)ptrCrpBlock, dwCrpSize/2, charCrpBlock);
     szSign = charCrpBlock;
+    
+    delete [] charCrpBlock;
+    delete [] ptrCrpBlock;
+    
     return true;
   }
 

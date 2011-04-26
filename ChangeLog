@@ -1,0 +1,8 @@
+Changelog
+
+Fri Jun 30 18:27:44 MSK 2006
+----------------------------
+  V 1.1
+  * Bugfixes:
+    - memory leak patch by Sergey Skvortsov <skv@protey.ru>
+
