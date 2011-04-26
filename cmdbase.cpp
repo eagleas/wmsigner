@@ -111,7 +111,7 @@ szptr& szptr::operator = (const szptr& cszptr)
 
 szptr& szptr::operator += (const szptr& cszptr)
 {
-  if(!&cszptr) return *this;
+//  if(!&cszptr) return *this;
   if(!cszptr.strlen()) return *this;
 
   char *szprev = sz;
@@ -238,17 +238,17 @@ DWORD Keys::GetMembersSize()
 char *Keys::LoadMembers(char *BufPtr)
 {
   char *ptrNextMemb = dwordFromBuf(&dwReserv, BufPtr);
-
+  unsigned int i = 0;
   ptrNextMemb = wordFromBuf(&wEKeyBase, ptrNextMemb);
   memcpy(arwEKey, ptrNextMemb, wEKeyBase);
-  for(WORD i=0;i<wEKeyBase/sizeof(arwEKey[0]);i++)
+  for( i=0;i<wEKeyBase/sizeof(arwEKey[0]);i++)
   { arwEKey[i] = SwitchIndian(arwEKey[i]); }
 
   ptrNextMemb += wEKeyBase;
 
   ptrNextMemb = wordFromBuf(&wNKeyBase, ptrNextMemb);
   memcpy(arwNKey, ptrNextMemb, wNKeyBase);
-  for(unsigned int i=0;i<wNKeyBase/sizeof(arwNKey[0]);i++)
+  for( i=0;i<wNKeyBase/sizeof(arwNKey[0]);i++)
   { arwNKey[i] = SwitchIndian(arwNKey[i]); }
 
   ptrNextMemb += wNKeyBase;
@@ -260,12 +260,12 @@ char *Keys::SaveMembers(char *BufPtr)
 {
   char *ptrNextMemb = dwordToBuf(BufPtr, dwReserv);
 
-  wEKeyBase = GetKeyBaseB(arwEKey);
+  wEKeyBase = (WORD)GetKeyBaseB(arwEKey);
   ptrNextMemb = wordToBuf(ptrNextMemb, wEKeyBase);
   memcpy(ptrNextMemb, arwEKey, wEKeyBase);
   ptrNextMemb += wEKeyBase;
 
-  wNKeyBase = GetKeyBaseB(arwNKey);
+  wNKeyBase = (WORD)GetKeyBaseB(arwNKey);
   ptrNextMemb = wordToBuf(ptrNextMemb, wNKeyBase);
   memcpy(ptrNextMemb, arwNKey, wNKeyBase);
   ptrNextMemb += wNKeyBase;
@@ -276,17 +276,19 @@ char *Keys::SaveMembers(char *BufPtr)
 
 void Keys::RecalcBase()
 {
-  wEKeyBase = GetKeyBaseB(arwEKey);
-  wNKeyBase = GetKeyBaseB(arwNKey);
+  wEKeyBase = (WORD)GetKeyBaseB(arwEKey);
+  wNKeyBase = (WORD)GetKeyBaseB(arwNKey);
 }
 
 int Keys::LoadFromBuffer(const char *Buf, DWORD dwBufLen)
 {
+  KeyFileFormat *keyFmt = (KeyFileFormat *)Buf;
+  DWORD ardwRecievedCRC[4];
+  DWORD ardwCheckedCRC[4];
+  DWORD i = 0;
+
   if(dwBufLen < KeyFileFormat::sizeof_header)
     return _CMDLOAD_ERR_BUF_LEN_;
-
-  KeyFileFormat *keyFmt = (KeyFileFormat *)Buf;
-  DWORD ardwRecievedCRC[4], ardwCheckedCRC[4], i;
 
   if(dwBufLen-2*sizeof(DWORD) >= SwitchIndian(keyFmt->dwLenBuf))
   {

@@ -19,6 +19,8 @@
  *  .........................................................................................................................
  *  This module present "AS IS", absolutely no warranty, if anybody modyfied this source.
  ****************************************************************************************************************************/
+
+#include "stdafx.h"
 #include "base64.h"
 
 /* Base_64 characters  */
@@ -141,4 +143,5 @@ int idx64( char ch )
 /*  Illegal character found, task aborted !  */
   fprintf( stderr, "\n\rBase64 Fatal Error: Illegal character found : '%c' [%d] - No Base64 legal character!!\n\r", ch, ch );
   exit(1);
+  return(0);
 }

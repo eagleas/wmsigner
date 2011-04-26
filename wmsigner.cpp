@@ -7,18 +7,18 @@
 #include "cmdbase.h"
 
 #ifndef ENCODE
-#define ENCODE	0
+#define ENCODE  0
 #endif
 
 #ifndef DECODE
-#define DECODE	1
+#define DECODE  1
 #endif
 
 #ifndef CODE_ERR
-#define CODE_ERR	0
+#define CODE_ERR        0
 #endif
 
-const char* WMSignerVersion = "2.0b";
+const char* WMSignerVersion = "2.0.1";
 bool isIgnoreKeyFile = false;
 bool isIgnoreIniFile = false;
 bool isKWMFileFromCL = false;
@@ -32,6 +32,7 @@ int CommandLineParse( const int argc, const char *argv[], char *szLoginCL, char 
 void NormStr( char *str );
 int fatal_err( char *err_msg );
 int ReadConsoleString( char *str );
+int main(int argc, char* argv[]);
 
 /***********************************/
 
@@ -269,8 +270,8 @@ int main(int argc, char* argv[])
   /*  Replace Key File Name from command Line, if present  */
   if( strlen(szFileNameCL) ) szIniFileFull = szFileNameCL;
 
-  if( ((Key64Flag == TRUE) || (isKWMFileFromCL == true)) && (strlen(szLoginCL) > 1) && (strlen(szPwdCL) > 1))
-	  isIgnoreIniFile = true;
+  if( ((Key64Flag == TRUE) || (isKWMFileFromCL == true)) && (strlen(szLoginCL) > 1) && (strlen(szPwdCL) >= 1))
+          isIgnoreIniFile = true;
 
   // loading ini-file
   if( isIgnoreIniFile == false )
@@ -278,7 +279,8 @@ int main(int argc, char* argv[])
    {
      sprintf(szError, "Error %d", siErrCode);
      printf(szError);
-     return 2;
+     exit(2);
+     // return 2;
    }
 
   //  Replace Login and Password from command Line, if present
@@ -320,9 +322,9 @@ int main(int argc, char* argv[])
 
 
   if ( result ){
-	  strncpy( pszOut, szSign, MAXSTR);
+          strncpy( pszOut, szSign, MAXSTR);
       printf("%s", pszOut);
-	  exit(0);
+          exit(0);
   }
   else {
     sprintf(pszOut, "Error %d", ErrorCode );
@@ -347,11 +349,12 @@ int ReadConsoleString( char *str )
     }
     str[i++] = (char) ch;
   }
-  return( 0 );
+  //return( 0 );
 }
 
 int fatal_err( char *err_msg )
 {
   printf( "%s", err_msg);
   exit(1);
+  return(0);
 }

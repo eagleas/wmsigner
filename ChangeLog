@@ -1,5 +1,11 @@
 Changelog
 
+Mon Sep 21 18:33:00 MSK 2009
+----------------------------
+  V 2.0.2
+  * Bug:
+    - ignore parameter in commandline when pass length=1
+
 Thu Aug 14 17:45:00 MSK 2007
 ----------------------------
   V 2.0.1

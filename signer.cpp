@@ -10,25 +10,25 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
-#define __open _open
-#define __read _read
-#define __close _close
+#define __open open
+#define __read read
+#define __close close
 #else
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <unistd.h>
 #include <errno.h>
-#define __open	open
-#define __read	read
-#define __close	close
+#define __open  open
+#define __read  read
+#define __close close
 #endif
 
 #ifndef TRUE
-#define TRUE	1
+#define TRUE    1
 #endif
 #ifndef FALSE
-#define FALSE	0
+#define FALSE   0
 #endif
 
 bool Signer::SecureKeyByIDPW(char *buf, DWORD dwBuf)
@@ -108,7 +108,7 @@ int Signer::LoadKeys()
   int errLoadKey;
   int fh = -1;
   int st_size = 0;
-  const int nMaxBufLen = sizeof(Keys) + KeyFileFormat::sizeof_header;
+  const int nMaxBufLen = 164; 
   char *pBufRead = new char[nMaxBufLen];   // Here Keys must be
   m_siErrorCode = 0;
   KeyFromCL = FALSE;
@@ -122,7 +122,7 @@ if( (!isIgnoreKeyFile) && (Key64Flag == FALSE) ) {
 
   if( fh == -1 )
   {
-    m_siErrorCode = errno;
+    m_siErrorCode = 2;//errno;
     return false;
   }
 
@@ -197,7 +197,7 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
 {
   DWORD dwCRC[14];
 #ifdef _DEBUG
-	printf("\n\rSign - Start !");
+        printf("\n\rSign - Start !");
 #endif
 
   if (!LoadKeys())
@@ -206,7 +206,7 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
     return false;
   }
 #ifdef _DEBUG
-	printf("\n\rSign - Load Keys");
+        printf("\n\rSign - Load Keys");
 #endif
 
   if(!keys.wEKeyBase || !keys.wNKeyBase)
@@ -242,31 +242,31 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
     { printf("packing%d: %x\n", h, ((char*)dwCRC)[h]); }
 #endif
 #ifdef _DEBUG
-	printf("\n\rCalling CrpB() - start");
+        printf("\n\rCalling CrpB() - start");
 #endif
     CrpB(ptrCrpBlock, (char *)dwCRC, sizeof(dwCRC), keys.arwEKey, keys.arwNKey);
 #ifdef _DEBUG
-	printf("\n\rCalling CrpB() - end");
+        printf("\n\rCalling CrpB() - end");
 #endif
     char *charCrpBlock = new char[dwCrpSize*2+1];
     us2sz((const unsigned short *)ptrCrpBlock, dwCrpSize/2, charCrpBlock);
     szSign = charCrpBlock;
 #ifdef _DEBUG
-	printf("\n\rSign - prepare end");
+        printf("\n\rSign - prepare end");
 #endif
     
     delete [] charCrpBlock;
     delete [] ptrCrpBlock;
 
 #ifdef _DEBUG
-	printf("\n\rSign - end return true");
+        printf("\n\rSign - end return true");
 #endif
     
     return true;
   }
 
 #ifdef _DEBUG
-	printf("\n\rSign - end return false");
+        printf("\n\rSign - end return false");
 #endif
   return false;
 }
@@ -283,7 +283,7 @@ int Signer2::LoadKeys()
   int errLoadKey;
 
   int nStrKeyDataLen = m_strKeyData.strlen();
-  const int nMaxBufLen = sizeof(Keys) + KeyFileFormat::sizeof_header;
+  const int nMaxBufLen = 164; 
   if ((nStrKeyDataLen>0) && (nStrKeyDataLen < nMaxBufLen*2))
   {
     BYTE *bKeyData = new BYTE[nMaxBufLen];

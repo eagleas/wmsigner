@@ -72,7 +72,7 @@ public:
   int mp_modexp(register unitptr expout,register unitptr expin,
   register unitptr exponent,register unitptr modulus);
 
-  int rsa_decrypt(unitptr M, unitptr C,	unitptr d, unitptr p, unitptr q, unitptr u);
+  int rsa_decrypt(unitptr M, unitptr C, unitptr d, unitptr p, unitptr q, unitptr u);
   int mp_sqrt(unitptr quotient,unitptr dividend);
 };
 

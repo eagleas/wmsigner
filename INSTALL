@@ -1,11 +1,5 @@
 
-Prepare:
-Fix values in test.ini (unix and win32 - different path and extensions)
-
 Compile and install wmsigner is easy:
 
 $ make
-$ make test
 $ make install
-
-

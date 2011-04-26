@@ -1,5 +1,5 @@
 PACKAGE = wmsigner
-VERSION = 2.0b
+VERSION = 2.0.1
 SHELL = /bin/sh
 
 PREFIX = ${prefix}/usr/local

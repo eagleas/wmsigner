@@ -7,6 +7,10 @@
 #include "rsalib1.h"
 #include <stdio.h>
 
+#ifndef WORD
+#define WORD unsigned int
+#endif
+
 int N_NEG_VAL=-1;
 
 CRSALib::CRSALib(short glob_pres)
@@ -741,7 +745,7 @@ int CRSALib::mp_sqrt(unitptr quotient,unitptr dividend)
   qbitmask = ((unit) 1 << ((qbits-1) & (16-1))) ;
 
   oldprecision = global_precision;
-  (global_precision = ((((qbits+3)+15) >> 4)));
+  (global_precision = (WORD)((((qbits+3)+15) >> 4)));
 
   *(quotient) |= qbitmask;
   {
@@ -832,7 +836,7 @@ int CRSALib::mp_sqrt(unitptr quotient,unitptr dividend)
     }
   }
   notperfect = ( ((*(remainder))!=(0)) || (significance(remainder)>1) );
-  (global_precision = (oldprecision));
+  (global_precision = (WORD)(oldprecision));
   return(notperfect);
 }
 //----
