@@ -1,5 +1,5 @@
 PACKAGE = WMSigner
-VERSION = 1.3
+VERSION = 1.4
 SHELL = /bin/sh
 
 PREFIX = ${prefix}/usr/local

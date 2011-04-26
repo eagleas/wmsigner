@@ -1,5 +1,12 @@
 Changelog
 
+Tue Jan 9 17:02:00 MSK 2007
+----------------------------
+  V 1.4
+  * Compatibles:
+    - add precompiler directive for compatible FreeBSD <= 4,
+      patch by Kostya Glazyrin <loriecat@rambler.ru>
+
 Mon Nov 14 17:05:00 MSK 2006
 ----------------------------
   V 1.3

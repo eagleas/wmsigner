@@ -1,7 +1,11 @@
 #ifndef _INC_MD4
 #define _INC_MD4
 
+#if defined(__FreeBSD__) && __FreeBSD__ < 5 	/* for FreeBSD version <= 4 */
+#include <inttypes.h> 
+#else                 				/* otherwise */
 #include <stdint.h>
+#endif
 
 typedef uint32_t Word32Type;
 
