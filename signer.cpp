@@ -253,8 +253,8 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
     dwCRC[2] = SwitchIndian(dwCRC[2]);
     dwCRC[3] = SwitchIndian(dwCRC[3]);
 #ifdef _DEBUG
-    for(int h=0;h<sizeof(dwCRC);h++)
-    { printf("packing%d: %d\n", h, ((char*)dwCRC)[h]); }
+//    for(int h=0;h<sizeof(dwCRC);h++)
+//    { printf("packing%d: %x\n", h, ((char*)dwCRC)[h]); }
 #endif
     CrpB(ptrCrpBlock, (char *)dwCRC, sizeof(dwCRC), keys.arwEKey, keys.arwNKey);
     char *charCrpBlock = new char[dwCrpSize*2+1];

@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
       {
       char c = szBufforInv[l];
 
-      if (c == 0x0D || c == 0x0A)
+      if (c == 0x0D)
           szBufforInv[l] = '\0';
         else
           break;
@@ -149,8 +149,6 @@ int main(int argc, char* argv[])
 
       szIn += szBufforInv;
 
-      if (!eof)
-        szIn += "\x0D\x0A";
     }
   }
 

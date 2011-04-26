@@ -1,5 +1,5 @@
 PACKAGE = WMSigner
-VERSION = 1.0.0
+VERSION = 1.3
 SHELL = /bin/sh
 
 PREFIX = ${prefix}/usr/local
@@ -18,7 +18,7 @@ INSTALL_DATA    = $(INSTALL) -m 644
 INSTALL_DOC	= $(INSTALL) -m 644
 
 all: cmdbase.cpp crypto.cpp md4.cpp rsalib1.cpp signer.cpp wmsigner.cpp
-	/usr/bin/g++ -static cmdbase.cpp crypto.cpp md4.cpp rsalib1.cpp signer.cpp wmsigner.cpp -o WMSigner
+	/usr/bin/g++ cmdbase.cpp crypto.cpp md4.cpp rsalib1.cpp signer.cpp wmsigner.cpp -o WMSigner
 	/bin/chmod g+x,o+x WMSigner
 
 install: WMSigner WMSigner.ini

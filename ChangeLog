@@ -1,5 +1,13 @@
 Changelog
 
+Mon Nov 14 17:05:00 MSK 2006
+----------------------------
+  V 1.3
+  * Small bug:
+    - fix VERSION in Makefile
+    - fix '\r\n' bug (appear in X6 WebMoney interface)
+  * Remove '-static' compiler directive
+
 Mon Jul 3 14:57:00 MSK 2006
 ----------------------------
   V 1.2

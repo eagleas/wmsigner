@@ -1,6 +1,6 @@
 Summary: WMSigner module for Webmoney signing data
 Name: WMSigner
-Version: 1.2
+Version: 1.3
 Release: 1
 Group: Applications/Tools
 Copyright: BSD
