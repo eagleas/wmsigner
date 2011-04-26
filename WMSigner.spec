@@ -1,6 +1,6 @@
 Summary: WMSigner module for Webmoney signing data
 Name: WMSigner
-Version: 1.0
+Version: 1.2
 Release: 1
 Group: Applications/Tools
 Copyright: BSD
@@ -34,4 +34,11 @@ EOF
 %attr(0755, root, bin) /usr/local/bin/WMSigner
 %attr(0644, root, bin) /usr/local/bin/WMSigner.ini
 %attr(0644, root, bin) /usr/local/man/man1/WMSigner.1
+%attr(0644, root, bin) /usr/share/doc/WMSigner/ChangeLog
+%attr(0644, root, bin) /usr/share/doc/WMSigner/README
+%attr(0644, root, bin) /usr/share/doc/WMSigner/README.rus
 
+%changelog
+* Wed Jul 05 2006 Alexander Oryol <eagle.alex@gmail.com> 1.2-1
+- update to 1.2
+- add ChangeLog, README, README.rus in /usr/share/doc/WMSigner to RPM

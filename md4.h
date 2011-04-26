@@ -1,10 +1,12 @@
 #ifndef _INC_MD4
 #define _INC_MD4
 
-typedef unsigned long Word32Type;
+#include <stdint.h>
+
+typedef uint32_t Word32Type;
 
 typedef struct {
-  Word32Type   buffer[4];
+  Word32Type buffer[4];
   unsigned char count[8];
   unsigned int done;
 } MDstruct, *MDptr;

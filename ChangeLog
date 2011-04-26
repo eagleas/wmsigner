@@ -1,5 +1,12 @@
 Changelog
 
+Mon Jul 3 14:57:00 MSK 2006
+----------------------------
+  V 1.2
+  * Compatibles:
+    - 64-bit arch compatibles patch by Sergey Skvortsov <skv@protey.ru>
+    - add ChangeLog, README, README.rus in /usr/share/doc/WMSigner
+    
 Fri Jun 30 18:27:44 MSK 2006
 ----------------------------
   V 1.1
