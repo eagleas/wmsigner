@@ -1,6 +1,6 @@
+#include "stdafx.h"
 #ifdef _WIN32
 #ifndef _CONSOLE
-#include "stdafx.h"
 #endif
 #endif
 
@@ -835,3 +835,4 @@ int CRSALib::mp_sqrt(unitptr quotient,unitptr dividend)
   (global_precision = (oldprecision));
   return(notperfect);
 }
+//----

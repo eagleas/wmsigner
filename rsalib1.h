@@ -1,3 +1,7 @@
+#ifndef __RSALIB1_H_INCLUDE__
+#define __RSALIB1_H_INCLUDE__
+#include "stdafx.h"
+
 typedef unsigned char boolean;
 typedef unsigned char byte;
 typedef unsigned short word16;
@@ -73,3 +77,5 @@ public:
 };
 
 inline void CRSALib::set_precision(short prec) {global_precision = prec;}
+#endif
+//---

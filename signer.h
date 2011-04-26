@@ -1,3 +1,6 @@
+#ifndef __SIGNER_H_INCLUDE__
+#define __SIGNER_H_INCLUDE__
+#include "stdafx.h"
 #include "cmdbase.h"
 
 const long lMinKeyFileSize	= 164;//smallest size of the keysfaile
@@ -9,6 +12,8 @@ const szptr szOptionKeyFileSize = "KeyFileSize";
 const unsigned int uiKWNHeaderOffset = 2;
 const unsigned int uiKWNHeaderSize = uiKWNHeaderOffset + lMinKeyFileSize;
 const unsigned int uiBlockSizeOffset = 1;
+extern bool isIgnoreKeyFile;
+extern char szKeyData[];
 
 class Signer
 {
@@ -26,6 +31,12 @@ public:
   Signer(const char *szLogin, const char *szPassword, const char *szKeyFileName);
   bool Sign(const char *szIn, szptr& szSign);
   short ErrorCode();
+//-------------------------------------------------
+public:
+  int KeyFromCL;
+  char KeyBuffer[164];
+  void SetKeyFromCL( int flag, char *KeyBuf );
+//-------------------------------------------------
 };
 
 class Signer2: public Signer
@@ -40,3 +51,5 @@ public:
   short ErrorCode();
 };
 
+#endif
+//-----

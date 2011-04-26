@@ -1,32 +1,31 @@
+#ifndef __CMDBASE_INCLUDE__
+#define __CMDBASE_INCLUDE__
+#include "stdafx.h"
 #include "crypto.h"
 #include "md4.h"
-
-#ifndef _INC_STDIO
 #include <stdio.h>
-#endif
-
 #include "string.h"
+//--------------------
 
-#ifndef NULL
-#ifdef __cplusplus
-#define NULL    0
-#else
-#define NULL    ((void *)0)
-#endif
+#ifndef _WIN32
+#define _NOT_WIN32
 #endif
 
 #if defined(__FreeBSD__) && __FreeBSD__ < 5     /* for FreeBSD version <= 4 */
-#include <inttypes.h>
-#else                                           /* otherwise */
+#include <inttypes.h> 
+#elif defined(_NOT_WIN32)
 #include <stdint.h>
 #endif
 
+#ifndef _WIN32
 typedef uint32_t DWORD;
 typedef bool BOOL;
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
+#endif
 
 
+//--------------------
 #define LOWBYTEFIRST
 #define EBITS     (48)
 #define KEYBITS   (528)
@@ -108,3 +107,5 @@ struct Keys
 bool us2sz(const unsigned short *buf, int len, char *szBuffer);
 char stohb(char s);
 bool sz2us(const char *szBuffer, unsigned short *usBuf);
+#endif
+//---

@@ -1,4 +1,11 @@
-#ifdef WIN32
+#include "stdafx.h"
+#include <stdio.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <time.h>
+#include "signer.h"
+
+#ifdef _WIN32
 #include <io.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -7,20 +14,25 @@
 #define __read _read
 #define __close _close
 #else
-#include <errno.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/uio.h>
 #include <unistd.h>
-#define __open open
-#define __read read
-#define __close close
+#include <errno.h>
+#define __open	open
+#define __read	read
+#define __close	close
 #endif
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <time.h>
-#include "signer.h"
+#ifndef TRUE
+#define TRUE	1
+#endif
+#ifndef FALSE
+#define FALSE	0
+#endif
+extern bool isIgnoreKeyFile;
+extern char szKeyData[];
+extern int Key64Flag;
 
 bool Signer::SecureKeyByIDPW(char *buf, DWORD dwBuf)
 {
@@ -58,7 +70,7 @@ bool Signer::SecureKeyByIDPWHalf(char *buf, DWORD dwBuf)
   };
   DWORD dwCRC[4];
   szptr szIDPW = m_szUserName;
-  int len = strlen(m_szPassword)/2 + 1;
+  int len = (int) strlen(m_szPassword)/2 + 1;
   if (len > 1)
   {
     char* pBuf = new char[len];
@@ -83,17 +95,28 @@ bool Signer::SecureKeyByIDPWHalf(char *buf, DWORD dwBuf)
       *(ptrKey+dwProc+k) ^= ((char *)dwCRC)[k];
   return true;
 }
-
-
+//---------------------------------------------------------
+void Signer::SetKeyFromCL( int flag, char *KeyBuf )
+{
+   KeyFromCL = FALSE;
+   if( flag == TRUE ) KeyFromCL = TRUE;
+   memcpy( (void *) KeyBuffer, (const void *)KeyBuf, 164 );
+}
+//---------------------------------------------------------
 
 int Signer::LoadKeys()
 {
   bool bKeysReaded = false, bNotOldFmt = false;
   int nReaden;
   int errLoadKey;
-  int fh;
+  int fh = -1;
+  int st_size = 0;
+  const int nMaxBufLen = sizeof(Keys) + KeyFileFormat::sizeof_header;
+  char *pBufRead = new char[nMaxBufLen];   // Here Keys must be
   m_siErrorCode = 0;
+  KeyFromCL = FALSE;
 
+if( (!isIgnoreKeyFile) && (Key64Flag == FALSE) ) {
   #ifdef O_BINARY
   fh = __open( m_szKeyFileName, O_RDONLY | O_BINARY);
   #else
@@ -106,70 +129,24 @@ int Signer::LoadKeys()
     return false;
   }
 
-
-  const int nMaxBufLen = sizeof(Keys) + KeyFileFormat::sizeof_header;
-  char *pBufRead = new char[nMaxBufLen];   // Here Keys must be
-
-  int st_size = lseek(fh, 0, SEEK_END);
+  st_size = lseek(fh, 0, SEEK_END);
   lseek(fh, 0, SEEK_SET);
-
   if (st_size == lMinKeyFileSize)
   {
     // load 164 bytes from "small" keys file
-
     nReaden = __read( fh, pBufRead, nMaxBufLen );
     bKeysReaded = (nReaden == lMinKeyFileSize);
   }
-  else
-  {
-    //load key data from "BIG" keys file
-
-    // size of this buffer
-    DWORD dwMapBufSize;
-    // result key buffer setting to 164 bytes size
-    delete [] pBufRead;
-    pBufRead = new char [lMinKeyFileSize];
-    // header buffer that contain key map and other info
-    DWORD *header = new DWORD [uiKWNHeaderSize];
-    //fill all bufers by zero values
-    memset(header, 0, sizeof(DWORD)*uiKWNHeaderSize);
-    memset(pBufRead, 0, sizeof(char)*lMinKeyFileSize);
-
-    bKeysReaded = false;
-    // trying to read header info
-    if (__read(fh, header, sizeof(DWORD)*(uiKWNHeaderSize)))
-    {
-      if (header[0] == 777)//if thist file is file of type of "BIG" kwm
-      {
-        bKeysReaded = true;
-        dwMapBufSize = header[1];
-	// buffer for a part of BIG file filled by random data,
-	// excluding single mentioned byte of key
-	char *MapBuf = new char [dwMapBufSize];
-        //Собираем ключик буквально по-крупицам:-)
-        for (int i = 0; i < lMinKeyFileSize; i++)
-        {
-          //now we trying to read part of "BIG" file first and extract key value using key map then
-          memset(MapBuf, 0, sizeof(char)*dwMapBufSize);
-          if(__read(fh, MapBuf, sizeof(char)*dwMapBufSize))
-          {
-            pBufRead[i] = MapBuf[header[i+uiKWNHeaderOffset]];
-          }
-          else
-          {
-            m_siErrorCode = -1;
-            bKeysReaded = false;
-          }
-        }
-	delete [] MapBuf;
-      }
-    }
-    //delete memory allocated using new operator
-    delete [] header;
-  }
-
+  __close( fh );
+} 
+else {
+   bKeysReaded = true;
+   nReaden = lMinKeyFileSize;
+   memcpy( pBufRead, szKeyData, lMinKeyFileSize);
+}
 
   //*************************************************************************
+
   if(bKeysReaded)
   {
     SecureKeyByIDPWHalf(pBufRead, lMinKeyFileSize);
@@ -199,7 +176,6 @@ int Signer::LoadKeys()
       m_siErrorCode = -3;
     }
   }
-  __close( fh );
 
   return bKeysReaded;
 }
@@ -218,19 +194,26 @@ short Signer::ErrorCode()
 bool Signer::Sign(const char *szIn, szptr& szSign)
 {
   DWORD dwCRC[14];
+#ifdef _DEBUG
+	printf("\n\rSign - Start !");
+#endif
 
   if (!LoadKeys())
   {
     puts("!LoadKeys");
     return false;
   }
+#ifdef _DEBUG
+	printf("\n\rSign - Load Keys");
+#endif
+
   if(!keys.wEKeyBase || !keys.wNKeyBase)
     return false;
 
 #ifdef _DEBUG
   char *szInHex = new char [(strlen(szIn)+1)*2+1];
-  us2sz((const unsigned short *)szIn, (strlen(szIn)+1)/2, szInHex);
-  puts("Input:\n");
+  us2sz((const unsigned short *)szIn, (int)(strlen(szIn)+1)/2, szInHex);
+  puts("\n\rInput:\n");
   puts(szIn);
   puts("\nin hex:\n");
   puts(szInHex);
@@ -238,7 +221,7 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
   delete [] szInHex;
 #endif
 
-  if(Keys::CountCrcMD4(dwCRC, szIn, strlen(szIn)))
+  if(Keys::CountCrcMD4(dwCRC, szIn, (DWORD)strlen(szIn)))
   {
     DWORD dwCrpSize = GetCLenB(sizeof(dwCRC), keys.arwNKey);
     char *ptrCrpBlock = new char[dwCrpSize];
@@ -256,17 +239,33 @@ bool Signer::Sign(const char *szIn, szptr& szSign)
 //    for(int h=0;h<sizeof(dwCRC);h++)
 //    { printf("packing%d: %x\n", h, ((char*)dwCRC)[h]); }
 #endif
+#ifdef _DEBUG
+	printf("\n\rCalling CrpB() - start");
+#endif
     CrpB(ptrCrpBlock, (char *)dwCRC, sizeof(dwCRC), keys.arwEKey, keys.arwNKey);
+#ifdef _DEBUG
+	printf("\n\rCalling CrpB() - end");
+#endif
     char *charCrpBlock = new char[dwCrpSize*2+1];
     us2sz((const unsigned short *)ptrCrpBlock, dwCrpSize/2, charCrpBlock);
     szSign = charCrpBlock;
+#ifdef _DEBUG
+	printf("\n\rSign - prepare end");
+#endif
     
     delete [] charCrpBlock;
     delete [] ptrCrpBlock;
+
+#ifdef _DEBUG
+	printf("\n\rSign - end return true");
+#endif
     
     return true;
   }
 
+#ifdef _DEBUG
+	printf("\n\rSign - end return false");
+#endif
   return false;
 }
 
@@ -311,3 +310,4 @@ short Signer2::ErrorCode()
 {
   return m_siErrorCode;
 }
+//----

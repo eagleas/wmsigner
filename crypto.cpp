@@ -1,15 +1,6 @@
-#ifdef _WIN32
-#ifndef _CONSOLE
 #include "stdafx.h"
-#endif
-#include <malloc.h>
-#else
-#include <stdlib.h>
-#endif
-
-#include <stdlib.h>
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "crypto.h"
 #include "rsalib1.h"
 #include <memory.h>
@@ -32,6 +23,7 @@ unsigned int GetCLenB(int len, const unsigned short *n, short KeyBits)
 
 unsigned int CrpB(char* crp, char* p, int len, const unsigned short * e, const unsigned short *n, short KeyBits)
 {
+
   CRSALib rsalib((KeyBits + 15)>> 4);
   rsalib.set_precision((KeyBits + 15) >> 4);
   int blocksize = rsalib.significance((unsigned short *)n)*2;
@@ -46,6 +38,7 @@ unsigned int CrpB(char* crp, char* p, int len, const unsigned short * e, const u
   stP = 0;
   stC = 0;
   int res = 0, res1 = 0;
+
   do
   {
     memset(cb, 0, CRSALib::MAX_UNIT_PRECISION*2);
@@ -69,13 +62,15 @@ unsigned int CrpB(char* crp, char* p, int len, const unsigned short * e, const u
       res1 = res;
     }
 
-    memcpy(crp+stC, cb, blocksize);
+	memcpy(crp+stC, cb, blocksize);
 
     stP += endP;
     stC += blocksize;
     iLen -= (workblocksize);
   } while (iLen > 0);
+
   free(buf);
+
   return GetCLenB(len, n);
 }
 
@@ -157,3 +152,4 @@ unsigned int GetKeyBaseB(const unsigned short *n)
   int blocksize = rsalib.significance((unsigned short *)n);
   return blocksize * 2;
 }
+//---

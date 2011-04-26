@@ -1,5 +1,12 @@
 Changelog
 
+Wed Jul 18 19:38:00 MSK 2007
+----------------------------
+  V 2.0 beta
+  * Added command line options (see man page) 
+  * Big code changes
+  * Rename WMSigner to wmsigner
+
 Tue Jan 9 17:02:00 MSK 2007
 ----------------------------
   V 1.4

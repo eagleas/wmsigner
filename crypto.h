@@ -1,6 +1,6 @@
-#ifndef __CRYPTO_H
-#define __CRYPTO_H
-
+#ifndef __CRYPTO_H__
+#define __CRYPTO_H__
+#include "stdafx.h"
 
 #ifndef keybits
   #define ebits 48
@@ -14,3 +14,4 @@ unsigned int GetKeyBaseB(const unsigned short *n);
 unsigned int GetKeyBase(const unsigned short *n);
 
 #endif
+//---

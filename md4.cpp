@@ -1,15 +1,10 @@
-#ifdef _WIN32
-#ifndef _CONSOLE
 #include "stdafx.h"
-#endif
-#endif
-
-#define TRUE  1
-#define FALSE 0
-
 #include <stdio.h>
 #include "md4.h"
 #include "cmdbase.h"
+
+#define TRUE  1
+#define FALSE 0
 
 #define I0  0x67452301L
 #define I1  0xefcdab89L
@@ -194,3 +189,4 @@ void MDupdate(MDptr MDp, unsigned char *X, Word32Type count)
       MDp->done = 1;
     }
 }
+//----

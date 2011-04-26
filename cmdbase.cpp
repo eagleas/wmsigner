@@ -1,9 +1,8 @@
-#ifdef _WIN32
-#ifndef _CONSOLE
 #include "stdafx.h"
-#endif
-#endif
-
+#include <stdio.h>
+#include <stdlib.h>
+//#include <io.h>
+#include <string.h>
 #include "ctype.h"
 #include "cmdbase.h"
 
@@ -45,7 +44,7 @@ szptr::szptr(const char *csz)
 {
   if (csz)
   {
-    sz = new char[::strlen(csz)+1];
+    sz = new char[::strlen(csz)+4];
     strcpy(sz, csz);
   }
   else
@@ -56,11 +55,11 @@ szptr::szptr(const szptr& cszptr)
 {
   if ((const char *)cszptr)
   {
-    sz = new char[cszptr.strlen()+1];
+    sz = new char[cszptr.strlen()+4];
     sz = strcpy(sz, cszptr);
   }
   else
-    sz = (const char *)cszptr ? strcpy(new char[cszptr.strlen()+1], cszptr) : NULL;
+    sz = (const char *)cszptr ? strcpy(new char[cszptr.strlen()+4], cszptr) : NULL;
 }
 
 szptr::~szptr()
@@ -79,7 +78,7 @@ char* szptr::operator = (char *csz)
   char *szprev = sz;
   if(csz)
   {
-    sz = new char[::strlen(csz)+1];
+    sz = new char[::strlen(csz)+4];
     sz = strcpy(sz, csz);
   }
   else
@@ -100,7 +99,7 @@ szptr& szptr::operator = (const szptr& cszptr)
   char *szprev = sz;
   if(cszptr)
   {
-    sz = new char[::strlen(cszptr)+1];
+    sz = new char[::strlen(cszptr)+4];
     sz = strcpy(sz, cszptr);
   }
   else
@@ -116,7 +115,7 @@ szptr& szptr::operator += (const szptr& cszptr)
   if(!cszptr.strlen()) return *this;
 
   char *szprev = sz;
-  sz = new char[strlen()+cszptr.strlen()+1];
+  sz = new char[strlen()+cszptr.strlen()+4];
   if(szprev)
   {
     strcpy(sz, szprev);
@@ -249,7 +248,7 @@ char *Keys::LoadMembers(char *BufPtr)
 
   ptrNextMemb = wordFromBuf(&wNKeyBase, ptrNextMemb);
   memcpy(arwNKey, ptrNextMemb, wNKeyBase);
-  for(int i=0;i<wNKeyBase/sizeof(arwNKey[0]);i++)
+  for(unsigned int i=0;i<wNKeyBase/sizeof(arwNKey[0]);i++)
   { arwNKey[i] = SwitchIndian(arwNKey[i]); }
 
   ptrNextMemb += wNKeyBase;
@@ -378,6 +377,7 @@ bool us2sz(const unsigned short *buf, int len, char *szBuffer)
 {
   char tmp[5];
   szBuffer[0] = '\0';
+
   for(int i=0;i<len;i++)
   {
     sprintf(tmp, "%04x", buf[i]);
@@ -414,3 +414,4 @@ bool sz2us(const char *szBuffer, unsigned short *usBuf)
   }
   return true;
 }
+//----

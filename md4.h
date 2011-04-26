@@ -1,13 +1,22 @@
-#ifndef _INC_MD4
-#define _INC_MD4
+#ifndef _INCLUDE_MD4
+#define _INCLUDE_MD4
+#include "stdafx.h"
+
+#ifndef _WIN32
+#define _NOT_WIN32
+#endif
 
 #if defined(__FreeBSD__) && __FreeBSD__ < 5 	/* for FreeBSD version <= 4 */
 #include <inttypes.h> 
-#else                 				/* otherwise */
+#elif defined(_NOT_WIN32)
 #include <stdint.h>
 #endif
 
+#ifdef _WIN32
+typedef DWORD Word32Type;
+#else
 typedef uint32_t Word32Type;
+#endif
 
 typedef struct {
   Word32Type buffer[4];
@@ -29,3 +38,4 @@ extern void MDprint(MDptr MDp) ;
 #endif
 
 #endif
+//---
