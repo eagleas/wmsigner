@@ -146,7 +146,7 @@ sub gen_reqn {
     use Time::HiRes qw( gettimeofday );
     ($s, $mi, $h, $d, $m, $y) = (localtime)[0..5];
     $ms = (gettimeofday)[1];
-    my $ret = sprintf("%04d%02d%02d%02d%02d%02d%02d", $y+1900, $m+1, $d, $h, $mi, $s, substr($ms, 0, 2));
+    my $ret = sprintf("%02d%02d%02d%02d%02d%02d%02d", $y-100, $m+1, $d, $h, $mi, $s, substr($ms, 0, 2));
     return $ret;
 };
 

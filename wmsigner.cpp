@@ -18,7 +18,7 @@
 #define CODE_ERR        0
 #endif
 
-const char* WMSignerVersion = "2.0.1";
+const char* WMSignerVersion = "2.0.3";
 bool isIgnoreKeyFile = false;
 bool isIgnoreIniFile = false;
 bool isKWMFileFromCL = false;
@@ -30,7 +30,7 @@ int CommandLineParse( const int argc, const char *argv[], char *szLoginCL, char 
                       char *szStringToSign, int *Key64Flag );
 
 void NormStr( char *str );
-int fatal_err( char *err_msg );
+int fatal_err( const char *err_msg );
 int ReadConsoleString( char *str );
 int main(int argc, char* argv[]);
 
@@ -65,9 +65,9 @@ bool LoadIniFile(const char *szFName, szptr& szLogin, szptr& szPwd, szptr& szFil
   char szBufStr[MAXSTR]="";
   bool bRC = false;
 
- szLogin = "";
- szPwd = "";
- szFileName = "";
+ szLogin = szptr("");
+ szPwd = szptr("");
+ szFileName = szptr("");
 
  FILE *file = fopen(szFName,"r");
   if (file != NULL)
@@ -222,7 +222,6 @@ int main(int argc, char* argv[])
 //--------------------------------------------------------------------
   szptr szLogin, szPwd, szFileName, szIn, szSign;
   char szBufforInv[MAXSTR+1] = "";
-  char szError[80] = "";
   short siErrCode = 0;
   char szKeyDataENC[MAXBUF+1] = "";    /* Buffer for Signre-s key      */
   char szStringToSign[MAXBUF+1] = "";  /* String for signification     */
@@ -277,8 +276,7 @@ int main(int argc, char* argv[])
   if( isIgnoreIniFile == false )
    if (!LoadIniFile(szIniFileFull, szLogin, szPwd, szFileName, siErrCode))
    {
-     sprintf(szError, "Error %d", siErrCode);
-     printf(szError);
+     printf("Error %d", siErrCode);
      exit(2);
      // return 2;
    }
@@ -352,7 +350,7 @@ int ReadConsoleString( char *str )
   //return( 0 );
 }
 
-int fatal_err( char *err_msg )
+int fatal_err( const char *err_msg )
 {
   printf( "%s", err_msg);
   exit(1);

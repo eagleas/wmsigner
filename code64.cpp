@@ -10,9 +10,9 @@
 /*  Main functions */
 
 int main( int argc, char *argv[] );
-void fatal_error( char *msg );
+void fatal_error( const char *msg );
 
-void fatal_error( char *msg )
+void fatal_error( const char *msg )
 {
   fprintf( stderr, "%s", msg);
   exit(2);
